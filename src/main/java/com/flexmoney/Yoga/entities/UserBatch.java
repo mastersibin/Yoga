@@ -30,4 +30,10 @@ public class UserBatch {
     @JoinColumn(name = "next_batch_id", referencedColumnName = "id")
     Batch nextBatch;
 
+    public UserBatch(User user, Batch batch, Batch nextBatch)
+    {
+        this.user = user;
+        this.batch = batch;
+        this.nextBatch = nextBatch;
+    }
 }

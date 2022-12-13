@@ -1,10 +1,7 @@
 package com.flexmoney.Yoga.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
@@ -24,5 +21,9 @@ public class User {
     @Column(name = "age")
     Integer age;
 
-
+    public User(String name, Integer age)
+    {
+        this.name = name;
+        this.age = age;
+    }
 }
