@@ -29,8 +29,9 @@ public class MainController {
     BatchService batchService;
 
     @PostMapping(value = "/enroll")
-    public String enroll(EnrollDTO enrollDTO)
+    public String enroll(@RequestBody EnrollDTO enrollDTO)
     {
+        System.out.printf(enrollDTO.getBatch_id().toString());
         if (enrollDTO.getAge() < 18 && enrollDTO.getAge() > 65)
             return "Age Not Accepted";
         if (userService.findUserByName(enrollDTO.getName()) == null)
@@ -47,7 +48,7 @@ public class MainController {
     }
 
     @PostMapping(value = "/completePayment")
-    public String payFees(PayFeesDTO payFeesDTO)
+    public String payFees(@RequestBody PayFeesDTO payFeesDTO)
     {
         User user = userService.findUserByName(payFeesDTO.getName());
         if (user == null)
@@ -63,18 +64,18 @@ public class MainController {
             return "Not Paid";
     }
 
-    @GetMapping(value = "/calculateFees")
-    public Integer calculateFees(CalculateFeesDTO calculateFeesDTO)
+    @PostMapping(value = "/calculateFees")
+    public Integer calculateFees(@RequestBody CalculateFeesDTO calculateFeesDTO)
     {
         User user = userService.findUserByName(calculateFeesDTO.getName());
         if (user == null)
             return 0;
-        return feesService.getFees(user, calculateFeesDTO.getMonth(), calculateFeesDTO.getYear());
+        return Integer.max(feesService.getFees(user, calculateFeesDTO.getMonth(), calculateFeesDTO.getYear()), 0);
 
     }
 
     @PostMapping(value = "/allowed")
-    public String allowed(AllowedDTO allowedDTO)
+    public String allowed(@RequestBody AllowedDTO allowedDTO)
     {
         User user = userService.findUserByName(allowedDTO.getName());
         if (user == null)
@@ -93,7 +94,7 @@ public class MainController {
     }
 
     @PostMapping(value = "setNextBatch")
-    public String setNextBatch(NextBatchDTO nextBatchDTO)
+    public String setNextBatch(@RequestBody NextBatchDTO nextBatchDTO)
     {
         User user = userService.findUserByName(nextBatchDTO.getName());
         if (user == null)
