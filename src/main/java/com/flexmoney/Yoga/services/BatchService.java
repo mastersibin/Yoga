@@ -1,6 +1,7 @@
 package com.flexmoney.Yoga.services;
 
 import com.flexmoney.Yoga.entities.Batch;
+import com.flexmoney.Yoga.entities.User;
 import com.flexmoney.Yoga.repository.BatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,4 +21,10 @@ public class BatchService {
             return null;
         return (Batch) batch.get();
     }
+
+    public Batch findByUser(User user)
+    {
+        return batchRepository.findByUser(user);
+    }
+
 }
