@@ -49,7 +49,7 @@ public class MainController {
         return "Not Enrolled";
     }
 
-    @PostMapping(value = "/payFees")
+    @PostMapping(value = "/completePayment")
     public String payFees(PayFeesDTO payFeesDTO)
     {
         User user = userService.findUserByName(payFeesDTO.getName());
@@ -86,7 +86,8 @@ public class MainController {
             return "Invalid Date";
         if (allowedDTO.getMonth()-prevFees.getMonth() <= 1)
         {
-            Batch batch = batchService.findByUser(user);
+            UserBatch userBatch = userBatchService.findByUser(user);
+            Batch batch = userBatch.getBatch();
             return "Batch Timings: "+batch.getStartTime()+" - "+batch.getEndTime();
         }
         else
