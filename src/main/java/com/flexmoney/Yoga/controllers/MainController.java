@@ -1,8 +1,6 @@
 package com.flexmoney.Yoga.controllers;
 
-import com.flexmoney.Yoga.dtos.CalculateFeesDTO;
-import com.flexmoney.Yoga.dtos.EnrollDTO;
-import com.flexmoney.Yoga.dtos.PayFeesDTO;
+import com.flexmoney.Yoga.dtos.*;
 import com.flexmoney.Yoga.entities.Batch;
 import com.flexmoney.Yoga.entities.Fees;
 import com.flexmoney.Yoga.entities.User;
@@ -13,6 +11,7 @@ import com.flexmoney.Yoga.services.UserBatchService;
 import com.flexmoney.Yoga.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -64,7 +63,7 @@ public class MainController {
             return "Not Paid";
     }
 
-    @PostMapping(value = "/calculateFees")
+    @GetMapping(value = "/calculateFees")
     public Integer calculateFees(CalculateFeesDTO calculateFeesDTO)
     {
         User user = userService.findUserByName(calculateFeesDTO.getName());
@@ -72,6 +71,38 @@ public class MainController {
             return 0;
         return feesService.getFees(user, calculateFeesDTO.getMonth(), calculateFeesDTO.getYear());
 
+    }
+
+    @GetMapping(value = "/allowed")
+    public String allowed(AllowedDTO allowedDTO)
+    {
+        User user = userService.findUserByName(allowedDTO.getName());
+        if (user == null)
+            return "User doesn't exist";
+        Fees prevFees = feesService.getFeesByUser(user);
+        if (allowedDTO.getYear() < prevFees.getYear() || (allowedDTO.getYear() == prevFees.getYear() && allowedDTO.getMonth() < prevFees.getMonth()))
+            return "Invalid Date";
+        if (allowedDTO.getMonth()-prevFees.getMonth() <= 1)
+        {
+            Batch batch = batchService.findByUser(user);
+            return "Batch Timings: "+batch.getStartTime()+" - "+batch.getEndTime();
+        }
+        else
+            return "Not Allowed";
+    }
+
+    @PostMapping(value = "setNextBatch")
+    public String setNextBatch(NextBatchDTO nextBatchDTO)
+    {
+        User user = userService.findUserByName(nextBatchDTO.getName());
+        if (user == null)
+            return "User doesn't exist";
+        UserBatch userBatch = userBatchService.findByUser(user);
+        Batch nextBatch = batchService.findById(nextBatchDTO.getBatch_id());
+        userBatch.setNextBatch(nextBatch);
+        if (userBatchService.saveUserBatch(userBatch) == null)
+            return "Failed";
+        return "Success";
     }
 
 }
