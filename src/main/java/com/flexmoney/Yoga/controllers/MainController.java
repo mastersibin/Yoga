@@ -34,6 +34,8 @@ public class MainController {
     @PostMapping(value = "/enroll")
     public String enroll(EnrollDTO enrollDTO)
     {
+        if (enrollDTO.getAge() < 18 && enrollDTO.getAge() > 65)
+            return "Age Not Accepted";
         if (userService.findUserByName(enrollDTO.getName()) == null)
         {
             User user = new User(enrollDTO.getName(), enrollDTO.getAge());
