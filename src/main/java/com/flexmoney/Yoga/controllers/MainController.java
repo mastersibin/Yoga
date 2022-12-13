@@ -10,10 +10,7 @@ import com.flexmoney.Yoga.services.FeesService;
 import com.flexmoney.Yoga.services.UserBatchService;
 import com.flexmoney.Yoga.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -56,10 +53,11 @@ public class MainController {
         if (user == null)
             return "User Doesn't Exist";
         Fees prevFees = feesService.getFeesByUser(user);
-        if (payFeesDTO.getYear() < prevFees.getYear() || (payFeesDTO.getYear() == prevFees.getYear() && payFeesDTO.getMonth() < prevFees.getMonth()))
+        if (payFeesDTO.getYear() < prevFees.getYear() || (payFeesDTO.getYear() == prevFees.getYear() && payFeesDTO.getMonth() <= prevFees.getMonth()))
             return "Already Paid";
-        Fees fees = new Fees(user, payFeesDTO.getMonth(), payFeesDTO.getYear());
-        if (feesService.saveFees(fees) != null)
+        prevFees.setMonth(payFeesDTO.getMonth());
+        prevFees.setYear(payFeesDTO.getYear());
+        if (feesService.saveFees(prevFees) != null)
             return "Paid";
         else
             return "Not Paid";
@@ -75,7 +73,7 @@ public class MainController {
 
     }
 
-    @GetMapping(value = "/allowed")
+    @PostMapping(value = "/allowed")
     public String allowed(AllowedDTO allowedDTO)
     {
         User user = userService.findUserByName(allowedDTO.getName());
