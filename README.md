@@ -5,6 +5,15 @@ This repo basically serves as backend for yoga application.
 In this application, It doesn't take system clock, instead you need to set the month and the year. Its done in order to test the application. So for almost every
 endpoint, you need to set the month and year.
 
+I have created the application using 3 tiers.
+
+Controller Layer
+Service Layer
+Repository Layer
+
+
+
+
 ## Description of API endpoints
 
 ### "/enroll"
@@ -61,3 +70,12 @@ Batch remains the same throughout the month. So suppose you have morning batch t
 So we basically run a cron job every month on the 1st. So cron basically sets current batch with the batch you set with this endpoint. If the next batch
 is not set the current batch will be continued next month too.
 
+
+## Running the application
+
+Clone frontend and backend.
+You need maven to build and run backend and npm to run frontend.
+You need to have mysql database in your system. 
+You can change the credentials in application.properties file for mysql. If you don't do this, backend won't connect to database.
+
+Happy Hacking!!
