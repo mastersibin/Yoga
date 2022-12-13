@@ -22,9 +22,6 @@ public class BatchService {
         return (Batch) batch.get();
     }
 
-    public Batch findByUser(User user)
-    {
-        return batchRepository.findByUser(user);
-    }
+
 
 }
