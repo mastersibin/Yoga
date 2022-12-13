@@ -23,4 +23,10 @@ public class Batch {
 
     @Column(name = "endTime")
     String endTime;
+
+    public Batch(String startTime, String endTime)
+    {
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 }
